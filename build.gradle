@@ -1,5 +1,8 @@
+// plugin reference
+// https://docs.gradle.org/current/userguide/groovy_plugin.html
+
 plugins {
-    id 'java'
+    id 'groovy'
 }
 
 group = 'my.example'
@@ -10,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.codehaus.groovy:groovy-all:3.0.22'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
