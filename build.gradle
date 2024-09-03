@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "gradle.plugin.com.sqlapp:sqlapp-gradle-plugin:0.12.25"
+    }
+}
+
 // plugin reference
 // https://docs.gradle.org/current/userguide/groovy_plugin.html
 
@@ -8,6 +20,7 @@ plugins {
 }
 
 apply plugin: 'io.spring.dependency-management'
+apply plugin: "com.sqlapp.db"
 
 group = 'my.example'
 version = '1.0-SNAPSHOT'
@@ -36,6 +49,13 @@ dependencies {
     // Lombock
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    // sqlapp
+    [
+            'sqlapp-core',
+            'sqlapp-command',
+            "sqlapp-core-mysql"
+    ].each { name -> implementation "com.sqlapp:${name}:0.12.25" }
 }
 
 test {
