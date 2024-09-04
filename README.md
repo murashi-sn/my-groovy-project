@@ -11,3 +11,6 @@ $ docker-compose up -d
 ```
 
 Access http://localost:8080/hello
+
+in container
+$ mysql --user=root --password demo
