@@ -1,16 +1,25 @@
 buildscript {
     ext {
-        sqlappjarpath = "localjarpath"
+        sqlapppath = "localjarpath"
+        slqappver = "0.12.31"
+        localsqlappver = "0.13.0-localdev"
     }
     repositories {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
-
     dependencies {
-        classpath "gradle.plugin.com.sqlapp:sqlapp-gradle-plugin:0.12.25"
-//        classpath files("${sqlappjarpath}/sqlapp-gradle-plugin-0.13.0-localdev.jar")
+        // sqlapp
+        //classpath files("${sqlapppath}\\sqlapp-gradle-plugin\\build\\libs\\sqlapp-gradle-plugin-${localsqlappver}.jar")
+        classpath "gradle.plugin.com.sqlapp:sqlapp-gradle-plugin:${slqappver}"
+        //classpath files("${sqlapppath}\\sqlapp-core\\build\\libs\\sqlapp-core-${localsqlappver}.jar")
+        classpath "com.sqlapp:sqlapp-core:${slqappver}"
+        //classpath files("${sqlapppath}\\sqlapp-command\\build\\libs\\sqlapp-command-${localsqlappver}.jar")
+        classpath "com.sqlapp:sqlapp-command:${slqappver}"
+        //classpath files("${sqlapppath}\\sqlapp-core-mysql\\build\\libs\\sqlapp-core-mysql-${localsqlappver}.jar")
+        classpath "com.sqlapp:sqlapp-core-mysql:${slqappver}"
+
         classpath 'com.mysql:mysql-connector-j:8.4.0'
     }
 }
@@ -54,13 +63,6 @@ dependencies {
     // Lombock
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
-
-    // sqlapp
-    [
-            'sqlapp-core',
-            'sqlapp-command',
-            "sqlapp-core-mysql"
-    ].each { name -> implementation "com.sqlapp:${name}:0.12.25" }
 }
 
 test {
@@ -69,19 +71,19 @@ test {
 
 //Export Schema XML
 exportXml {
-    debug=true
+    debug = true
     dataSource {
-		driverClassName="com.mysql.cj.jdbc.Driver"
-		url="jdbc:mysql://localhost:3306/demo"
-		username="root"
-		password="root"
+        driverClassName = "com.mysql.cj.jdbc.Driver"
+        url = "jdbc:mysql://localhost:3306/demo"
+        username = "root"
+        password = "root"
 //        properties "${jdbcConfigPath}"
     }
 //	target="catalog" or "schema" or "tables" or...
-    target="tables"
-    outputPath=file("schemas")
-    outputFileName="schema.xml"
-    dumpRows=true
-    includeSchemas=["comment"]
+    target = "tables"
+    outputPath = file("schemas")
+    outputFileName = "schema.xml"
+    dumpRows = true
+    includeSchemas = ["comment"]
 //    includeRowDumpTables []
 }
