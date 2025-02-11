@@ -21,6 +21,9 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
+// NOTE: If you don't need to run the tests, please uncomment the following line.
+// project.gradle.startParameter.excludedTaskNames.add("test")
+
 test {
     useJUnitPlatform()
 }
