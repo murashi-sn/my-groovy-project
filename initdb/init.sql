@@ -1,0 +1,6 @@
+CREATE TABLE employee
+(
+  id INT(10) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(40) NOT NULL,
+  PRIMARY KEY (id)
+);
