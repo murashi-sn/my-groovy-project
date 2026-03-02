@@ -18,6 +18,11 @@ dependencies {
     // https://docs.groovy-lang.org/docs/groovy-3.0.22/html/documentation/
     implementation 'org.codehaus.groovy:groovy-all:3.0.22'
     testImplementation platform('org.junit:junit-bom:5.10.0')
+
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.77'
+    implementation 'com.google.crypto.tink:tink:1.12.0'
+
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
