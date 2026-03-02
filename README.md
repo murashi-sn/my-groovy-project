@@ -24,19 +24,7 @@ openssl genpkey -algorithm RSA -out keys/private_key.pem -pkeyopt rsa_keygen_bit
 openssl rsa -pubout -in keys/private_key.pem -out keys/public_key.pem
 ```
 
-### 2. Setup Gradle Wrapper
-
-Download the Gradle Wrapper jar file:
-
-```bash
-# Execute in Git Bash
-curl -L -o gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.5.0/gradle/wrapper/gradle-wrapper.jar
-
-# Grant execute permission to gradlew
-chmod +x gradlew
-```
-
-### 3. How to Run
+### 2. How to Run
 
 ```bash
 # Build
