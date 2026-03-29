@@ -1,3 +1,5 @@
+big_size.csv.gzip
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
