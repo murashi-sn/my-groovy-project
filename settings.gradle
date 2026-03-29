@@ -1,2 +1,7 @@
+pluginManagement {
+    repositories {
+        maven { url = 'https://repo.spring.io/snapshot' }
+        gradlePluginPortal()
+    }
+}
 rootProject.name = 'my-groovy-project'
-

@@ -3,6 +3,8 @@
 
 plugins {
     id 'groovy'
+    id 'org.springframework.boot' version '3.5.14-SNAPSHOT'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'my.example'
@@ -10,6 +12,7 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url = 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
@@ -17,18 +20,7 @@ dependencies {
     // https://docs.groovy-lang.org/docs/groovy-3.0.22/html/gapi/
     // https://docs.groovy-lang.org/docs/groovy-3.0.22/html/documentation/
     implementation 'org.codehaus.groovy:groovy-all:3.0.22'
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
-
-// NOTE: If you don't need to run the tests, please uncomment the following line.
-// project.gradle.startParameter.excludedTaskNames.add("test")
-
-test {
-    useJUnitPlatform()
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
