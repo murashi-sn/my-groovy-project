@@ -3,6 +3,7 @@
 
 plugins {
     id 'groovy'
+    id 'application'
 }
 
 group = 'my.example'
@@ -17,8 +18,13 @@ dependencies {
     // https://docs.groovy-lang.org/docs/groovy-5.0.5/html/gapi/
     // https://docs.groovy-lang.org/docs/groovy-5.0.5/html/documentation/
     implementation 'org.apache.groovy:groovy-all:5.0.5'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+application {
+    mainClass = 'my.example.GroovyMain'
 }
 
 // NOTE: If you don't need to run the tests, please uncomment the following line.
