@@ -176,6 +176,17 @@ abstract class BaseHttpClient {
         return execute(request)
     }
 
+    /**
+     * Sends a HEAD request.
+     * @param path    Path relative to the base URL
+     * @param headers Additional request headers (optional)
+     * @return {@link HttpResponse}
+     */
+    protected HttpResponse head(String path, Map<String, String> headers = [:]) {
+        def request = buildRequestBuilder(path, headers).head().build()
+        return execute(request)
+    }
+
     private Request.Builder buildRequestBuilder(String path, Map<String, String> headers) {
         def builder = new Request.Builder().url(baseUrl + path)
         headers.each { key, value -> builder.addHeader(key, value) }
@@ -186,12 +197,17 @@ abstract class BaseHttpClient {
         interceptors.each { it.onRequest?.call(request.method(), request.url().toString(), request.headers().toMultimap()) }
 
         try (Response response = client.newCall(request).execute()) {
-            def bodyString = response.body()?.string() ?: ""
+            String bodyString = null
             Object json = null
-            // Parse the body as JSON when Content-Type is application/json
-            def contentType = response.header("Content-Type") ?: ""
-            if (contentType.contains("application/json") && bodyString) {
-                json = new JsonSlurper().parseText(bodyString)
+            // HEAD responses have no body, so skip parsing
+            if (request.method() != "HEAD") {
+                bodyString = response.body()?.string() ?: ""
+                json = null
+                // Parse the body as JSON when Content-Type is application/json
+                def contentType = response.header("Content-Type") ?: ""
+                if (contentType.contains("application/json") && bodyString) {
+                    json = new JsonSlurper().parseText(bodyString)
+                }
             }
             def httpResponse = new HttpResponse(response.code(), response.headers().toMultimap(), bodyString, json)
             interceptors.each { it.onResponse?.call(httpResponse) }
