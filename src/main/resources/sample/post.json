@@ -1,0 +1,5 @@
+{
+  "title": "Groovy HTTP Client test",
+  "body": "A sample HTTP client implementation using OkHttp.",
+  "userId": 1
+}
