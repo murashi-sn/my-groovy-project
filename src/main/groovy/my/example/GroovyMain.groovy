@@ -1,19 +1,24 @@
 package my.example
 
 import groovy.json.JsonOutput
+import my.example.http.FileCookieJar
 import my.example.http.HttpInterceptor
 import my.example.http.sample.JsonPlaceholderClient
 
+// ---- Prepare Cookie Jar instance ----
+def cookieFile = new File("cookies.json")
+def cookieJar = new FileCookieJar(cookieFile)
+
 // ---- Interceptors shared across client instances ----
 def interceptors = [
-    new HttpInterceptor(
-        onRequest:  { method, url, headers -> println "[>>] ${method} ${url}" },
-        onResponse: { res -> println "[<<] ${res.statusCode} (success=${res.success})" }
-    )
+        new HttpInterceptor(
+                onRequest: { method, url, headers -> println "[>>] ${method} ${url}" },
+                onResponse: { res -> println "[<<] ${res.statusCode} (success=${res.success})" }
+        )
 ]
 
 // ---- Example 1: Using a standalone client instance ----
-def client = new JsonPlaceholderClient(interceptors)
+def client = new JsonPlaceholderClient(cookieJar, interceptors)
 
 // ---- Example 2: Sharing cookies and interceptors across different client instances ----
 // def cookieJar = new InMemoryCookieJar()
@@ -36,9 +41,9 @@ println "Body:   ${JsonOutput.prettyPrint(JsonOutput.toJson(postResponse.json))}
 // POST: create a new post from a Map
 println "\n=== POST /posts (from Map) ==="
 def createResponse = client.createPost([
-    title : "Groovy HTTP Client test",
-    body  : "A sample HTTP client implementation using OkHttp.",
-    userId: 1
+        title : "Groovy HTTP Client test",
+        body  : "A sample HTTP client implementation using OkHttp.",
+        userId: 1
 ])
 println "Status: ${createResponse.statusCode}"
 println "Body:   ${JsonOutput.prettyPrint(JsonOutput.toJson(createResponse.json))}"
@@ -60,10 +65,10 @@ println "Body:   ${JsonOutput.prettyPrint(JsonOutput.toJson(createFromFileRespon
 // PUT: update a post
 println "\n=== PUT /posts/1 ==="
 def updateResponse = client.updatePost(1, [
-    id    : 1,
-    title : "Updated title",
-    body  : "Updated body",
-    userId: 1
+        id    : 1,
+        title : "Updated title",
+        body  : "Updated body",
+        userId: 1
 ])
 println "Status: ${updateResponse.statusCode}"
 println "Body:   ${JsonOutput.prettyPrint(JsonOutput.toJson(updateResponse.json))}"
