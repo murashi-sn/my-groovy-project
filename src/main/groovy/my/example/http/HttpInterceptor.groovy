@@ -9,7 +9,7 @@ package my.example.http
  * <ul>
  *   <li>{@code String method} — HTTP method (e.g. "GET", "POST")</li>
  *   <li>{@code String url}    — Full request URL</li>
- *   <li>{@code Map<String, List<String>> headers} — Request headers</li>
+ *   <li>{@code Request.Builder builder} — Request builder for adding headers dynamically</li>
  * </ul>
  *
  * <h3>onResponse</h3>
@@ -20,7 +20,10 @@ package my.example.http
  *
  * <pre>
  *   def interceptor = new HttpInterceptor(
- *       onRequest:  { method, url, headers -> println "[>>] ${method} ${url}" },
+ *       onRequest:  { method, url, builder -> 
+ *           println "[>>] ${method} ${url}"
+ *           builder.addHeader("Authorization", "Bearer token123")
+ *       },
  *       onResponse: { res -> println "[<<] ${res.statusCode}" }
  *   )
  *   def client = new JsonPlaceholderClient([interceptor])
@@ -30,7 +33,7 @@ class HttpInterceptor {
 
     /**
      * Called before the request is sent.
-     * Signature: {@code { String method, String url, Map<String, List<String>> headers -> ... }}
+     * Signature: {@code { String method, String url, Request.Builder builder -> ... }}
      */
     Closure onRequest
 

@@ -194,9 +194,17 @@ abstract class BaseHttpClient {
     }
 
     private HttpResponse execute(Request request) {
-        interceptors.each { it.onRequest?.call(request.method(), request.url().toString(), request.headers().toMultimap()) }
+        // Create builder from existing request to allow interceptors to add headers dynamically
+        def builder = request.newBuilder()
+        
+        // Allow interceptors to add headers
+        interceptors.each { 
+            it.onRequest?.call(request.method(), request.url().toString(), builder) 
+        }
+        
+        def finalRequest = builder.build()
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = client.newCall(finalRequest).execute()) {
             String bodyString = null
             Object json = null
             // HEAD responses have no body, so skip parsing
