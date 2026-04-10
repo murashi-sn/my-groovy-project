@@ -17,6 +17,13 @@ class JsonPlaceholderClient extends BaseHttpClient {
 
     JsonPlaceholderClient() {
         super(BASE_URL)
+        // Add interceptor after instance initialization
+        addInterceptor(new HttpInterceptor(
+            onRequest: { method, url, headers -> 
+                // Instance members can be referenced here
+                println "[${this.class.simpleName}] ${method} ${url}"
+            }
+        ))
     }
 
     /** Use this constructor to share cookies with other client instances. */

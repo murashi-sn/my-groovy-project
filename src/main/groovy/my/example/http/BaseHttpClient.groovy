@@ -72,10 +72,18 @@ abstract class BaseHttpClient {
      */
     BaseHttpClient(String baseUrl, CookieJar cookieJar, List<HttpInterceptor> interceptors) {
         this.baseUrl = baseUrl
-        this.interceptors = interceptors
+        this.interceptors = new ArrayList<>(interceptors)
         this.client = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
                 .build()
+    }
+
+    /**
+     * Adds an interceptor after initialization.
+     * @param interceptor The interceptor to add
+     */
+    protected void addInterceptor(HttpInterceptor interceptor) {
+        this.interceptors.add(interceptor)
     }
 
     /**
