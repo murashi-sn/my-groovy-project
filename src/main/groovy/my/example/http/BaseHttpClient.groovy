@@ -90,10 +90,11 @@ abstract class BaseHttpClient {
      * Sends a GET request.
      * @param path    Path relative to the base URL (e.g. "/users/1")
      * @param headers Additional request headers (optional)
+     * @param params  URL query parameters (optional)
      * @return {@link HttpResponse} containing statusCode, headers, body, and parsed json
      */
-    protected HttpResponse get(String path, Map<String, String> headers = [:]) {
-        def request = buildRequestBuilder(path, headers).get().build()
+    protected HttpResponse get(String path, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+        def request = buildRequestBuilder(path, headers, params).get().build()
         return execute(request)
     }
 
@@ -102,11 +103,12 @@ abstract class BaseHttpClient {
      * @param path    Path relative to the base URL
      * @param body    Request body (Map or List will be serialized to JSON)
      * @param headers Additional request headers (optional)
+     * @param params  URL query parameters (optional)
      * @return {@link HttpResponse}
      */
-    protected HttpResponse post(String path, Object body, Map<String, String> headers = [:]) {
+    protected HttpResponse post(String path, Object body, Map<String, String> headers = [:], Map<String, String> params = [:]) {
         def requestBody = RequestBody.create(JsonOutput.toJson(body), JSON_MEDIA_TYPE)
-        def request = buildRequestBuilder(path, headers).post(requestBody).build()
+        def request = buildRequestBuilder(path, headers, params).post(requestBody).build()
         return execute(request)
     }
 
@@ -116,10 +118,11 @@ abstract class BaseHttpClient {
      * @param path       Path relative to the base URL
      * @param jsonString Raw JSON string to send as the request body
      * @param headers    Additional request headers (optional)
+     * @param params     URL query parameters (optional)
      * @return {@link HttpResponse}
      */
-    protected HttpResponse post(String path, String jsonString, Map<String, String> headers = [:]) {
-        def request = buildRequestBuilder(path, headers).post(RequestBody.create(jsonString, JSON_MEDIA_TYPE)).build()
+    protected HttpResponse post(String path, String jsonString, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+        def request = buildRequestBuilder(path, headers, params).post(RequestBody.create(jsonString, JSON_MEDIA_TYPE)).build()
         return execute(request)
     }
 
@@ -128,10 +131,11 @@ abstract class BaseHttpClient {
      * @param path     Path relative to the base URL
      * @param jsonFile JSON file to send as the request body
      * @param headers  Additional request headers (optional)
+     * @param params   URL query parameters (optional)
      * @return {@link HttpResponse}
      */
-    protected HttpResponse post(String path, File jsonFile, Map<String, String> headers = [:]) {
-        def request = buildRequestBuilder(path, headers).post(RequestBody.create(jsonFile, JSON_MEDIA_TYPE)).build()
+    protected HttpResponse post(String path, File jsonFile, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+        def request = buildRequestBuilder(path, headers, params).post(RequestBody.create(jsonFile, JSON_MEDIA_TYPE)).build()
         return execute(request)
     }
 
@@ -140,11 +144,12 @@ abstract class BaseHttpClient {
      * @param path    Path relative to the base URL
      * @param body    Request body (Map or List will be serialized to JSON)
      * @param headers Additional request headers (optional)
+     * @param params  URL query parameters (optional)
      * @return {@link HttpResponse}
      */
-    protected HttpResponse put(String path, Object body, Map<String, String> headers = [:]) {
+    protected HttpResponse put(String path, Object body, Map<String, String> headers = [:], Map<String, String> params = [:]) {
         def requestBody = RequestBody.create(JsonOutput.toJson(body), JSON_MEDIA_TYPE)
-        def request = buildRequestBuilder(path, headers).put(requestBody).build()
+        def request = buildRequestBuilder(path, headers, params).put(requestBody).build()
         return execute(request)
     }
 
@@ -154,10 +159,11 @@ abstract class BaseHttpClient {
      * @param path       Path relative to the base URL
      * @param jsonString Raw JSON string to send as the request body
      * @param headers    Additional request headers (optional)
+     * @param params     URL query parameters (optional)
      * @return {@link HttpResponse}
      */
-    protected HttpResponse put(String path, String jsonString, Map<String, String> headers = [:]) {
-        def request = buildRequestBuilder(path, headers).put(RequestBody.create(jsonString, JSON_MEDIA_TYPE)).build()
+    protected HttpResponse put(String path, String jsonString, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+        def request = buildRequestBuilder(path, headers, params).put(RequestBody.create(jsonString, JSON_MEDIA_TYPE)).build()
         return execute(request)
     }
 
@@ -166,10 +172,11 @@ abstract class BaseHttpClient {
      * @param path     Path relative to the base URL
      * @param jsonFile JSON file to send as the request body
      * @param headers  Additional request headers (optional)
+     * @param params   URL query parameters (optional)
      * @return {@link HttpResponse}
      */
-    protected HttpResponse put(String path, File jsonFile, Map<String, String> headers = [:]) {
-        def request = buildRequestBuilder(path, headers).put(RequestBody.create(jsonFile, JSON_MEDIA_TYPE)).build()
+    protected HttpResponse put(String path, File jsonFile, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+        def request = buildRequestBuilder(path, headers, params).put(RequestBody.create(jsonFile, JSON_MEDIA_TYPE)).build()
         return execute(request)
     }
 
@@ -177,10 +184,11 @@ abstract class BaseHttpClient {
      * Sends a DELETE request.
      * @param path    Path relative to the base URL
      * @param headers Additional request headers (optional)
+     * @param params  URL query parameters (optional)
      * @return {@link HttpResponse}
      */
-    protected HttpResponse delete(String path, Map<String, String> headers = [:]) {
-        def request = buildRequestBuilder(path, headers).delete().build()
+    protected HttpResponse delete(String path, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+        def request = buildRequestBuilder(path, headers, params).delete().build()
         return execute(request)
     }
 
@@ -188,15 +196,18 @@ abstract class BaseHttpClient {
      * Sends a HEAD request.
      * @param path    Path relative to the base URL
      * @param headers Additional request headers (optional)
+     * @param params  URL query parameters (optional)
      * @return {@link HttpResponse}
      */
-    protected HttpResponse head(String path, Map<String, String> headers = [:]) {
-        def request = buildRequestBuilder(path, headers).head().build()
+    protected HttpResponse head(String path, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+        def request = buildRequestBuilder(path, headers, params).head().build()
         return execute(request)
     }
 
-    private Request.Builder buildRequestBuilder(String path, Map<String, String> headers) {
-        def builder = new Request.Builder().url(baseUrl + path)
+    private Request.Builder buildRequestBuilder(String path, Map<String, String> headers, Map<String, String> params = [:]) {
+        def urlBuilder = HttpUrl.parse(baseUrl + path).newBuilder()
+        params.each { key, value -> urlBuilder.addQueryParameter(key, value) }
+        def builder = new Request.Builder().url(urlBuilder.build())
         headers.each { key, value -> builder.addHeader(key, value) }
         return builder
     }
