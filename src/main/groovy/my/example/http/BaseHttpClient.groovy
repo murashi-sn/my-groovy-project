@@ -37,7 +37,7 @@ abstract class BaseHttpClient {
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json; charset=utf-8")
 
     /** Base URL for requests (e.g. "https://api.example.com") */
-    protected final String baseUrl
+    private final String baseUrl
 
     protected final OkHttpClient client
     private final List<HttpInterceptor> interceptors
