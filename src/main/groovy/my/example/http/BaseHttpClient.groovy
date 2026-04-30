@@ -206,7 +206,7 @@ abstract class BaseHttpClient {
     }
 
     private Request.Builder buildRequestBuilder(String path, Map<String, String> headers, Map<String, String> params = [:]) {
-        def urlBuilder = HttpUrl.parse(baseUrl + path).newBuilder()
+        def urlBuilder = HttpUrl.get(baseUrl + path).newBuilder()
         params.each { key, value -> urlBuilder.addQueryParameter(key, value) }
         def builder = new Request.Builder().url(urlBuilder.build())
         headers.each { key, value -> builder.addHeader(key, value) }
