@@ -30,6 +30,8 @@ class InMemoryCookieJar implements CookieJar {
 
     @Override
     List<Cookie> loadForRequest(HttpUrl url) {
+        def now = System.currentTimeMillis()
+        store.removeAll { it.expiresAt() < now }
         store.findAll { it.matches(url) }
     }
 

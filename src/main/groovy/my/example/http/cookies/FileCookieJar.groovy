@@ -43,6 +43,9 @@ class FileCookieJar implements CookieJar {
 
     @Override
     List<Cookie> loadForRequest(HttpUrl url) {
+        def now = System.currentTimeMillis()
+        store.removeAll { it.expiresAt() < now }
+        flush()
         store.findAll { it.matches(url) }
     }
 
