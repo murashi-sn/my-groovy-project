@@ -1,4 +1,4 @@
-package my.example.http
+package my.example.http.cookies
 
 import okhttp3.Cookie
 import okhttp3.CookieJar

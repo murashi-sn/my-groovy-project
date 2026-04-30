@@ -1,4 +1,4 @@
-package my.example.http
+package my.example.http.cookies
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper

@@ -2,6 +2,7 @@ package my.example.http
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import my.example.http.cookies.InMemoryCookieJar
 import okhttp3.*
 
 /**

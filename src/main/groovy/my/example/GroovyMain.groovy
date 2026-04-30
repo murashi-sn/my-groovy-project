@@ -1,7 +1,7 @@
 package my.example
 
 import groovy.json.JsonOutput
-import my.example.http.FileCookieJar
+import my.example.http.cookies.FileCookieJar
 import my.example.http.HttpInterceptor
 import my.example.http.sample.JsonPlaceholderClient
 
