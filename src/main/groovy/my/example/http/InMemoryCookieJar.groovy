@@ -18,15 +18,24 @@ import okhttp3.HttpUrl
  */
 class InMemoryCookieJar implements CookieJar {
 
-    private final Map<String, List<Cookie>> store = [:]
+    private final List<Cookie> store = []
 
     @Override
     void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        store[url.host()] = cookies
+        cookies.each { newCookie ->
+            store.removeAll { isSameCookie(it, newCookie) }
+        }
+        store.addAll(cookies)
     }
 
     @Override
     List<Cookie> loadForRequest(HttpUrl url) {
-        return store[url.host()] ?: []
+        store.findAll { it.matches(url) }
+    }
+
+    private static boolean isSameCookie(Cookie cookie1, Cookie cookie2) {
+        cookie1.name() == cookie2.name() &&
+        cookie1.domain() == cookie2.domain() &&
+        cookie1.path() == cookie2.path()
     }
 }

@@ -20,7 +20,7 @@ import okhttp3.HttpUrl
 class FileCookieJar implements CookieJar {
 
     private final File cookieFile
-    private final Map<String, List<Cookie>> store = [:]
+    private final List<Cookie> store = []
 
     /**
      * @param cookieFile File to persist cookies in (JSON format).
@@ -34,25 +34,28 @@ class FileCookieJar implements CookieJar {
 
     @Override
     void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        store[url.host()] = cookies
+        cookies.each { newCookie ->
+            store.removeAll { isSameCookie(it, newCookie) }
+        }
+        store.addAll(cookies)
         flush()
     }
 
     @Override
     List<Cookie> loadForRequest(HttpUrl url) {
-        store[url.host()] ?: []
+        store.findAll { it.matches(url) }
     }
 
-    /** Removes all cookies from the store and overwrites the file with an empty object. */
+    /** Removes all cookies from the store and overwrites the file with an empty array. */
     void clear() {
         store.clear()
-        cookieFile.text = '{}'
+        cookieFile.text = '[]'
     }
 
     /** Forces the current store to be written to the file. */
     void flush() {
         cookieFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(
-            store.collectEntries { host, cookies -> [host, cookies.collect(serialize)] }
+            store.collect(serialize)
         ))
     }
 
@@ -60,12 +63,17 @@ class FileCookieJar implements CookieJar {
     // Private helpers
     // -------------------------------------------------------------------------
 
+    private static boolean isSameCookie(Cookie cookie1, Cookie cookie2) {
+        cookie1.name() == cookie2.name() &&
+        cookie1.domain() == cookie2.domain() &&
+        cookie1.path() == cookie2.path()
+    }
+
     private void loadFromFile() {
         if (!cookieFile.exists()) return
         try {
-            new JsonSlurper().parse(cookieFile).each { host, list ->
-                store[host] = list.collect(deserialize).findAll()
-            }
+            def list = new JsonSlurper().parse(cookieFile)
+            store.addAll(list.collect(deserialize).findAll())
         } catch (e) {
             System.err.println "[FileCookieJar] Failed to parse cookie file, starting with empty store: ${e.message}"
             store.clear()
