@@ -9,7 +9,19 @@ import okhttp3.CookieJar
  * HTTP client for JSONPlaceholder (https://jsonplaceholder.typicode.com).
  * Extends {@link BaseHttpClient} and provides methods for each endpoint.
  *
- * This class serves as a sample implementation showing how to create a service-specific client.
+ * This class serves as a sample implementation showing how to create a service-specific client
+ * and how to use context for dynamic request handling.
+ *
+ * <h3>Using Context for Request Metadata</h3>
+ * <p>Requests can pass a context map to control behavior in interceptors.
+ * For example, enable verbose logging for specific requests:</p>
+ * <pre>
+ *   def client = new JsonPlaceholderClient()
+ *   // Normal request (default logging)
+ *   client.getPost(1)
+ *   // Verbose request (detailed logging)
+ *   client.getPostVerbose(1)
+ * </pre>
  */
 class JsonPlaceholderClient extends BaseHttpClient {
 
@@ -19,9 +31,13 @@ class JsonPlaceholderClient extends BaseHttpClient {
         super(BASE_URL)
         // Add interceptor after instance initialization
         addInterceptor(new HttpInterceptor(
-            onRequest: { method, url, headers -> 
+            onRequest: { method, url, builder, context -> 
                 // Instance members can be referenced here
-                println "[${this.class.simpleName}] ${method} ${url}"
+                if (context?.verbose) {
+                    println "[${this.class.simpleName}] ${method} ${url} (context: ${context})"
+                } else {
+                    println "[${this.class.simpleName}] ${method} ${url}"
+                }
             }
         ))
     }
@@ -119,5 +135,24 @@ class JsonPlaceholderClient extends BaseHttpClient {
      */
     HttpResponse deletePost(int id) {
         return delete("/posts/${id}")
+    }
+
+    /**
+     * Retrieves a post by ID with verbose logging enabled.
+     * Demonstrates how to pass context to a request for interceptor handling.
+     *
+     * @param id Post ID
+     * @return {@link HttpResponse}
+     *
+     * <pre>
+     *   def client = new JsonPlaceholderClient()
+     *   // Standard logging
+     *   client.getPost(1)
+     *   // Verbose logging with context information
+     *   client.getPostVerbose(1)
+     * </pre>
+     */
+    HttpResponse getPostVerbose(int id) {
+        return get("/posts/${id}", [:], [:], [verbose: true])
     }
 }

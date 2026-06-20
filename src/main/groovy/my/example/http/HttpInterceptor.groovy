@@ -10,6 +10,7 @@ package my.example.http
  *   <li>{@code String method} — HTTP method (e.g. "GET", "POST")</li>
  *   <li>{@code String url}    — Full request URL</li>
  *   <li>{@code Request.Builder builder} — Request builder for adding headers dynamically</li>
+ *   <li>{@code Object context} — Optional custom context object passed from the request method</li>
  * </ul>
  *
  * <h3>onResponse</h3>
@@ -19,6 +20,7 @@ package my.example.http
  * </ul>
  *
  * <pre>
+ *   // Basic usage without context
  *   def interceptor = new HttpInterceptor(
  *       onRequest:  { method, url, builder -> 
  *           println "[>>] ${method} ${url}"
@@ -27,6 +29,18 @@ package my.example.http
  *       onResponse: { res -> println "[<<] ${res.statusCode}" }
  *   )
  *   def client = new JsonPlaceholderClient([interceptor])
+ *
+ *   // Usage with context for authentication switching
+ *   def authInterceptor = new HttpInterceptor(
+ *       onRequest: { method, url, builder, context ->
+ *           if (context?.useToken) {
+ *               builder.addHeader("Authorization", "Bearer token123")
+ *           } else {
+ *               builder.addHeader("Authorization", "Basic dXNlcjpwYXNz")
+ *           }
+ *       }
+ *   )
+ *   client.get("/api/special", [:], [:], [useToken: true])  // Pass context to request
  * </pre>
  */
 class HttpInterceptor {

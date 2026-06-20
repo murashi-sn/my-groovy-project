@@ -92,11 +92,12 @@ abstract class BaseHttpClient {
      * @param path    Path relative to the base URL (e.g. "/users/1")
      * @param headers Additional request headers (optional)
      * @param params  URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse} containing statusCode, headers, body, and parsed json
      */
-    protected HttpResponse get(String path, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse get(String path, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def request = buildRequestBuilder(path, headers, params).get().build()
-        return execute(request)
+        return execute(request, context)
     }
 
     /**
@@ -105,12 +106,13 @@ abstract class BaseHttpClient {
      * @param body    Request body (Map or List will be serialized to JSON)
      * @param headers Additional request headers (optional)
      * @param params  URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
-    protected HttpResponse post(String path, Object body, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse post(String path, Object body, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def requestBody = RequestBody.create(JsonOutput.toJson(body), JSON_MEDIA_TYPE)
         def request = buildRequestBuilder(path, headers, params).post(requestBody).build()
-        return execute(request)
+        return execute(request, context)
     }
 
     /**
@@ -120,11 +122,12 @@ abstract class BaseHttpClient {
      * @param jsonString Raw JSON string to send as the request body
      * @param headers    Additional request headers (optional)
      * @param params     URL query parameters (optional)
+     * @param context    Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
-    protected HttpResponse post(String path, String jsonString, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse post(String path, String jsonString, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def request = buildRequestBuilder(path, headers, params).post(RequestBody.create(jsonString, JSON_MEDIA_TYPE)).build()
-        return execute(request)
+        return execute(request, context)
     }
 
     /**
@@ -133,11 +136,12 @@ abstract class BaseHttpClient {
      * @param jsonFile JSON file to send as the request body
      * @param headers  Additional request headers (optional)
      * @param params   URL query parameters (optional)
+     * @param context  Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
-    protected HttpResponse post(String path, File jsonFile, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse post(String path, File jsonFile, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def request = buildRequestBuilder(path, headers, params).post(RequestBody.create(jsonFile, JSON_MEDIA_TYPE)).build()
-        return execute(request)
+        return execute(request, context)
     }
 
     /**
@@ -146,12 +150,13 @@ abstract class BaseHttpClient {
      * @param body    Request body (Map or List will be serialized to JSON)
      * @param headers Additional request headers (optional)
      * @param params  URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
-    protected HttpResponse put(String path, Object body, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse put(String path, Object body, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def requestBody = RequestBody.create(JsonOutput.toJson(body), JSON_MEDIA_TYPE)
         def request = buildRequestBuilder(path, headers, params).put(requestBody).build()
-        return execute(request)
+        return execute(request, context)
     }
 
     /**
@@ -161,11 +166,12 @@ abstract class BaseHttpClient {
      * @param jsonString Raw JSON string to send as the request body
      * @param headers    Additional request headers (optional)
      * @param params     URL query parameters (optional)
+     * @param context    Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
-    protected HttpResponse put(String path, String jsonString, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse put(String path, String jsonString, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def request = buildRequestBuilder(path, headers, params).put(RequestBody.create(jsonString, JSON_MEDIA_TYPE)).build()
-        return execute(request)
+        return execute(request, context)
     }
 
     /**
@@ -174,11 +180,12 @@ abstract class BaseHttpClient {
      * @param jsonFile JSON file to send as the request body
      * @param headers  Additional request headers (optional)
      * @param params   URL query parameters (optional)
+     * @param context  Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
-    protected HttpResponse put(String path, File jsonFile, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse put(String path, File jsonFile, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def request = buildRequestBuilder(path, headers, params).put(RequestBody.create(jsonFile, JSON_MEDIA_TYPE)).build()
-        return execute(request)
+        return execute(request, context)
     }
 
     /**
@@ -186,11 +193,12 @@ abstract class BaseHttpClient {
      * @param path    Path relative to the base URL
      * @param headers Additional request headers (optional)
      * @param params  URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
-    protected HttpResponse delete(String path, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse delete(String path, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def request = buildRequestBuilder(path, headers, params).delete().build()
-        return execute(request)
+        return execute(request, context)
     }
 
     /**
@@ -198,11 +206,12 @@ abstract class BaseHttpClient {
      * @param path    Path relative to the base URL
      * @param headers Additional request headers (optional)
      * @param params  URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
-    protected HttpResponse head(String path, Map<String, String> headers = [:], Map<String, String> params = [:]) {
+    protected HttpResponse head(String path, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
         def request = buildRequestBuilder(path, headers, params).head().build()
-        return execute(request)
+        return execute(request, context)
     }
 
     private Request.Builder buildRequestBuilder(String path, Map<String, String> headers, Map<String, String> params = [:]) {
@@ -213,13 +222,13 @@ abstract class BaseHttpClient {
         return builder
     }
 
-    private HttpResponse execute(Request request) {
+    private HttpResponse execute(Request request, Object context = null) {
         // Create builder from existing request to allow interceptors to add headers dynamically
         def builder = request.newBuilder()
         
         // Allow interceptors to add headers
         interceptors.each { 
-            it.onRequest?.call(request.method(), request.url().toString(), builder) 
+            it.onRequest?.call(request.method(), request.url().toString(), builder, context) 
         }
         
         def finalRequest = builder.build()
