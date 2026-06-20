@@ -42,14 +42,14 @@ abstract class BaseHttpClient {
     protected final OkHttpClient client
     private final List<HttpInterceptor> interceptors
 
-    /** @param baseUrl Base URL for requests */
+    /** @param baseUrl Base URL for requests   */
     BaseHttpClient(String baseUrl) {
         this(baseUrl, new InMemoryCookieJar(), [])
     }
 
     /**
      * Use this constructor to share cookies across different client instances.
-     * @param baseUrl   Base URL for requests
+     * @param baseUrl Base URL for requests
      * @param cookieJar Shared CookieJar instance
      */
     BaseHttpClient(String baseUrl, CookieJar cookieJar) {
@@ -58,7 +58,7 @@ abstract class BaseHttpClient {
 
     /**
      * Use this constructor to register interceptors.
-     * @param baseUrl      Base URL for requests
+     * @param baseUrl Base URL for requests
      * @param interceptors List of {@link HttpInterceptor} applied to every request
      */
     BaseHttpClient(String baseUrl, List<HttpInterceptor> interceptors) {
@@ -67,8 +67,8 @@ abstract class BaseHttpClient {
 
     /**
      * Full constructor. Use this to share both a cookie store and interceptors across instances.
-     * @param baseUrl      Base URL for requests
-     * @param cookieJar    Shared CookieJar instance
+     * @param baseUrl Base URL for requests
+     * @param cookieJar Shared CookieJar instance
      * @param interceptors List of {@link HttpInterceptor} applied to every request
      */
     BaseHttpClient(String baseUrl, CookieJar cookieJar, List<HttpInterceptor> interceptors) {
@@ -89,9 +89,9 @@ abstract class BaseHttpClient {
 
     /**
      * Sends a GET request.
-     * @param path    Path relative to the base URL (e.g. "/users/1")
+     * @param path Path relative to the base URL (e.g. "/users/1")
      * @param headers Additional request headers (optional)
-     * @param params  URL query parameters (optional)
+     * @param params URL query parameters (optional)
      * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse} containing statusCode, headers, body, and parsed json
      */
@@ -102,10 +102,10 @@ abstract class BaseHttpClient {
 
     /**
      * Sends a POST request.
-     * @param path    Path relative to the base URL
-     * @param body    Request body (Map or List will be serialized to JSON)
+     * @param path Path relative to the base URL
+     * @param body Request body (Map or List will be serialized to JSON)
      * @param headers Additional request headers (optional)
-     * @param params  URL query parameters (optional)
+     * @param params URL query parameters (optional)
      * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
@@ -118,11 +118,11 @@ abstract class BaseHttpClient {
     /**
      * Sends a POST request with a raw JSON string as the request body.
      * Unlike {@code post(path, Object)}, the string is sent as-is without re-serialization.
-     * @param path       Path relative to the base URL
+     * @param path Path relative to the base URL
      * @param jsonString Raw JSON string to send as the request body
-     * @param headers    Additional request headers (optional)
-     * @param params     URL query parameters (optional)
-     * @param context    Optional custom context object passed to interceptors
+     * @param headers Additional request headers (optional)
+     * @param params URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
     protected HttpResponse post(String path, String jsonString, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
@@ -132,11 +132,11 @@ abstract class BaseHttpClient {
 
     /**
      * Sends a POST request with the contents of a JSON file as the request body.
-     * @param path     Path relative to the base URL
+     * @param path Path relative to the base URL
      * @param jsonFile JSON file to send as the request body
-     * @param headers  Additional request headers (optional)
-     * @param params   URL query parameters (optional)
-     * @param context  Optional custom context object passed to interceptors
+     * @param headers Additional request headers (optional)
+     * @param params URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
     protected HttpResponse post(String path, File jsonFile, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
@@ -146,10 +146,10 @@ abstract class BaseHttpClient {
 
     /**
      * Sends a PUT request.
-     * @param path    Path relative to the base URL
-     * @param body    Request body (Map or List will be serialized to JSON)
+     * @param path Path relative to the base URL
+     * @param body Request body (Map or List will be serialized to JSON)
      * @param headers Additional request headers (optional)
-     * @param params  URL query parameters (optional)
+     * @param params URL query parameters (optional)
      * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
@@ -162,11 +162,11 @@ abstract class BaseHttpClient {
     /**
      * Sends a PUT request with a raw JSON string as the request body.
      * Unlike {@code put(path, Object)}, the string is sent as-is without re-serialization.
-     * @param path       Path relative to the base URL
+     * @param path Path relative to the base URL
      * @param jsonString Raw JSON string to send as the request body
-     * @param headers    Additional request headers (optional)
-     * @param params     URL query parameters (optional)
-     * @param context    Optional custom context object passed to interceptors
+     * @param headers Additional request headers (optional)
+     * @param params URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
     protected HttpResponse put(String path, String jsonString, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
@@ -176,11 +176,11 @@ abstract class BaseHttpClient {
 
     /**
      * Sends a PUT request with the contents of a JSON file as the request body.
-     * @param path     Path relative to the base URL
+     * @param path Path relative to the base URL
      * @param jsonFile JSON file to send as the request body
-     * @param headers  Additional request headers (optional)
-     * @param params   URL query parameters (optional)
-     * @param context  Optional custom context object passed to interceptors
+     * @param headers Additional request headers (optional)
+     * @param params URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
     protected HttpResponse put(String path, File jsonFile, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
@@ -190,9 +190,9 @@ abstract class BaseHttpClient {
 
     /**
      * Sends a DELETE request.
-     * @param path    Path relative to the base URL
+     * @param path Path relative to the base URL
      * @param headers Additional request headers (optional)
-     * @param params  URL query parameters (optional)
+     * @param params URL query parameters (optional)
      * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
@@ -203,9 +203,9 @@ abstract class BaseHttpClient {
 
     /**
      * Sends a HEAD request.
-     * @param path    Path relative to the base URL
+     * @param path Path relative to the base URL
      * @param headers Additional request headers (optional)
-     * @param params  URL query parameters (optional)
+     * @param params URL query parameters (optional)
      * @param context Optional custom context object passed to interceptors
      * @return {@link HttpResponse}
      */
@@ -225,12 +225,12 @@ abstract class BaseHttpClient {
     private HttpResponse execute(Request request, Object context = null) {
         // Create builder from existing request to allow interceptors to add headers dynamically
         def builder = request.newBuilder()
-        
+
         // Allow interceptors to add headers
-        interceptors.each { 
-            it.onRequest?.call(request.method(), request.url().toString(), builder, context) 
+        interceptors.each {
+            it.onRequest?.call(request.method(), request.url().toString(), builder, context)
         }
-        
+
         def finalRequest = builder.build()
 
         try (Response response = client.newCall(finalRequest).execute()) {
@@ -246,9 +246,35 @@ abstract class BaseHttpClient {
                     json = new JsonSlurper().parseText(bodyString)
                 }
             }
-            def httpResponse = new HttpResponse(response.code(), response.headers().toMultimap(), bodyString, json)
+
+            def httpResponse = new HttpResponse(
+                    response.code(),
+                    response.headers().toMultimap(),
+                    bodyString,
+                    json,
+                    buildRequestInfo(response)
+            )
             interceptors.each { it.onResponse?.call(httpResponse) }
             return httpResponse
         }
+    }
+
+    private static HttpResponse.RequestInfo buildRequestInfo(Response response) {
+        def req = response.request()
+        def url = req.url()
+
+        // Inline query parameter extraction
+        def params = [:]
+        url.queryParameterNames().each { name ->
+            params[name] = url.queryParameter(name)
+        }
+
+        // Inline headers conversion to lowercase keys
+        def headersMap = [:]
+        req.headers().names().each { name ->
+            headersMap[name.toLowerCase()] = req.headers().values(name)
+        }
+
+        return new HttpResponse.RequestInfo(params as Map<String, String>, headersMap as Map<String, List<String>>)
     }
 }
