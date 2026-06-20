@@ -12,7 +12,7 @@ def cookieJar = new FileCookieJar(cookieFile)
 // ---- Interceptors shared across client instances ----
 def interceptors = [
         new HttpInterceptor(
-                onRequest: { method, url, builder -> 
+                onRequest: { method, url, builder, context ->
                     println "[>>] ${method} ${url}"
                     // Example: Add custom headers to every request
                     builder.addHeader("X-Custom-Header", "groovy-client")
