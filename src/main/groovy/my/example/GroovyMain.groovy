@@ -2,34 +2,14 @@ package my.example
 
 import groovy.json.JsonOutput
 import my.example.http.cookies.FileCookieJar
-import my.example.http.HttpInterceptor
 import my.example.http.sample.JsonPlaceholderClient
 
 // ---- Prepare Cookie Jar instance ----
 def cookieFile = new File("cookies.json")
 def cookieJar = new FileCookieJar(cookieFile)
 
-// ---- Interceptors shared across client instances ----
-def interceptors = [
-        new HttpInterceptor(
-                onRequest: { method, url, builder, context ->
-                    println "[>>] ${method} ${url}"
-                    // Example: Add custom headers to every request
-                    builder.addHeader("X-Custom-Header", "groovy-client")
-                    builder.addHeader("User-Agent", "GroovyHttpClient/1.0")
-                },
-                onResponse: { res -> println "[<<] ${res.statusCode} (success=${res.success})" }
-        )
-]
-
-// ---- Example 1: Using a standalone client instance ----
-def client = new JsonPlaceholderClient(cookieJar, interceptors)
-
-// ---- Example 2: Sharing cookies and interceptors across different client instances ----
-// def cookieJar = new InMemoryCookieJar()
-// def clientA = new JsonPlaceholderClient(cookieJar, interceptors)
-// def clientB = new JsonPlaceholderClient(cookieJar, interceptors)
-// clientA and clientB share the same cookie store and interceptors
+// Sharing cookies
+def client = new JsonPlaceholderClient(cookieJar)
 
 // GET: fetch a single TODO
 println "=== GET /todos/1 ==="

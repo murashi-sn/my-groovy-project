@@ -27,35 +27,29 @@ class JsonPlaceholderClient extends BaseHttpClient {
 
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com"
 
-    JsonPlaceholderClient() {
-        super(BASE_URL)
+    JsonPlaceholderClient(CookieJar cookieJar) {
+        super(BASE_URL, cookieJar)
         // Add interceptor after instance initialization
         addInterceptor(new HttpInterceptor(
-            onRequest: { method, url, builder, context -> 
-                // Instance members can be referenced here
-                if (context?.verbose) {
-                    println "[${this.class.simpleName}] ${method} ${url} (context: ${context})"
-                } else {
-                    println "[${this.class.simpleName}] ${method} ${url}"
+                onRequest: { method, url, builder, context ->
+                    // Instance members can be referenced here
+                    if (context?.verbose) {
+                        println "[${this.class.simpleName}] ${method} ${url} (context: ${context})"
+                    } else {
+                        println "[${this.class.simpleName}] ${method} ${url}"
+                    }
+                },
+                onResponse: { res -> println "[<<] ${res.statusCode} (success=${res.success})" }
+        ))
+        addInterceptor(new HttpInterceptor(
+                onRequest: { method, url, builder, context ->
+                    // Example: Add custom headers to every request
+                    builder.addHeader("X-Custom-Header", "groovy-client")
+                    builder.addHeader("User-Agent", "GroovyHttpClient/1.0")
                 }
-            }
         ))
     }
 
-    /** Use this constructor to share cookies with other client instances. */
-    JsonPlaceholderClient(CookieJar cookieJar) {
-        super(BASE_URL, cookieJar)
-    }
-
-    /** Use this constructor to register shared interceptors. */
-    JsonPlaceholderClient(List<HttpInterceptor> interceptors) {
-        super(BASE_URL, interceptors)
-    }
-
-    /** Use this constructor to share both cookies and interceptors across instances. */
-    JsonPlaceholderClient(CookieJar cookieJar, List<HttpInterceptor> interceptors) {
-        super(BASE_URL, cookieJar, interceptors)
-    }
 
     /**
      * Retrieves all TODO items.
@@ -120,7 +114,7 @@ class JsonPlaceholderClient extends BaseHttpClient {
 
     /**
      * Updates a post by ID.
-     * @param id   Post ID
+     * @param id Post ID
      * @param data Updated data
      * @return {@link HttpResponse}
      */
