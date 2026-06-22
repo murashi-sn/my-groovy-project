@@ -20,25 +20,16 @@ package my.example.http
  * </ul>
  *
  * <pre>
- *   // Basic usage without context
- *   def interceptor = new HttpInterceptor(
- *       onRequest:  { method, url, builder -> 
- *           println "[>>] ${method} ${url}"
- *           builder.addHeader("Authorization", "Bearer token123")
- *       },
- *       onResponse: { res -> println "[<<] ${res.statusCode}" }
- *   )
- *   def client = new JsonPlaceholderClient([interceptor])
- *
- *   // Usage with context for authentication switching
+ *   // Usage with context (4 arguments)
  *   def authInterceptor = new HttpInterceptor(
- *       onRequest: { method, url, builder, context ->
+ *       onRequest: { String method, String url, Request.Builder builder, Object context ->
  *           if (context?.useToken) {
  *               builder.addHeader("Authorization", "Bearer token123")
  *           } else {
  *               builder.addHeader("Authorization", "Basic dXNlcjpwYXNz")
  *           }
- *       }
+ *       },
+ *       onResponse: { res -> println "[<<] ${res.statusCode}" }
  *   )
  *   client.get("/api/special", [:], [:], [useToken: true])  // Pass context to request
  * </pre>
@@ -47,7 +38,7 @@ class HttpInterceptor {
 
     /**
      * Called before the request is sent.
-     * Signature: {@code { String method, String url, Request.Builder builder -> ... }}
+     * Signature: {@code { String method, String url, Request.Builder builder, Object context -> ... }}
      */
     Closure onRequest
 
