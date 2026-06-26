@@ -202,6 +202,36 @@ abstract class BaseHttpClient {
     }
 
     /**
+     * Sends a POST request with form-urlencoded body.
+     * @param path Path relative to the base URL
+     * @param formData Form data as a Map (key-value pairs)
+     * @param headers Additional request headers (optional)
+     * @param params URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
+     * @return {@link HttpResponse}
+     */
+    protected HttpResponse postForm(String path, Map<String, String> formData, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
+        def requestBody = buildFormBody(formData)
+        def request = buildRequestBuilder(path, headers, params).post(requestBody).build()
+        return execute(request, context)
+    }
+
+    /**
+     * Sends a PUT request with form-urlencoded body.
+     * @param path Path relative to the base URL
+     * @param formData Form data as a Map (key-value pairs)
+     * @param headers Additional request headers (optional)
+     * @param params URL query parameters (optional)
+     * @param context Optional custom context object passed to interceptors
+     * @return {@link HttpResponse}
+     */
+    protected HttpResponse putForm(String path, Map<String, String> formData, Map<String, String> headers = [:], Map<String, String> params = [:], Object context = null) {
+        def requestBody = buildFormBody(formData)
+        def request = buildRequestBuilder(path, headers, params).put(requestBody).build()
+        return execute(request, context)
+    }
+
+    /**
      * Sends a HEAD request.
      * @param path Path relative to the base URL
      * @param headers Additional request headers (optional)
@@ -277,4 +307,15 @@ abstract class BaseHttpClient {
 
         return new HttpResponse.RequestInfo(params as Map<String, String>, headersMap as Map<String, List<String>>)
     }
+
+    private static RequestBody buildFormBody(Map<String, String> formData) {
+        def formBodyBuilder = new FormBody.Builder()
+        formData.each { key, value ->
+            if (value != null) {
+                formBodyBuilder.add(key, value)
+            }
+        }
+        return formBodyBuilder.build()
+    }
+
 }
