@@ -4,6 +4,7 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import my.example.http.cookies.InMemoryCookieJar
 import okhttp3.*
+import java.util.concurrent.TimeUnit
 
 /**
  * Base class for HTTP clients.
@@ -20,17 +21,9 @@ import okhttp3.*
  * and/or an {@code onResponse} callback (called after the response is parsed).
  * The same list can be shared across multiple client instances.</p>
  *
- * <pre>
- *   def interceptors = [
- *       new HttpInterceptor(
- *           onRequest:  { method, url, headers -> println "[>>] ${method} ${url}" },
- *           onResponse: { res -> println "[<<] ${res.statusCode}" }
- *       )
- *   ]
- *   def cookieJar = new InMemoryCookieJar()
- *   def clientA = new ServiceAClient(cookieJar, interceptors)
- *   def clientB = new ServiceBClient(cookieJar, interceptors)
- * </pre>
+ * <h3>Configuration</h3>
+ * <p>All constructors accept an optional {@code config} map parameter for timeouts and other settings.
+ * See {@link HttpClientConfig} for global defaults and configuration details.</p>
  */
 abstract class BaseHttpClient {
 
@@ -43,39 +36,47 @@ abstract class BaseHttpClient {
     private final List<HttpInterceptor> interceptors
 
     /** @param baseUrl Base URL for requests   */
-    BaseHttpClient(String baseUrl) {
-        this(baseUrl, new InMemoryCookieJar(), [])
+    BaseHttpClient(String baseUrl, Map<String, Object> config = [:]) {
+        this(baseUrl, new InMemoryCookieJar(), [], config)
     }
 
     /**
      * Use this constructor to share cookies across different client instances.
      * @param baseUrl Base URL for requests
      * @param cookieJar Shared CookieJar instance
+     * @param config Configuration map for timeouts and other settings (default: empty map)
      */
-    BaseHttpClient(String baseUrl, CookieJar cookieJar) {
-        this(baseUrl, cookieJar, [])
+    BaseHttpClient(String baseUrl, CookieJar cookieJar, Map<String, Object> config = [:]) {
+        this(baseUrl, cookieJar, [], config)
     }
 
     /**
      * Use this constructor to register interceptors.
      * @param baseUrl Base URL for requests
      * @param interceptors List of {@link HttpInterceptor} applied to every request
+     * @param config Configuration map for timeouts and other settings (default: empty map)
      */
-    BaseHttpClient(String baseUrl, List<HttpInterceptor> interceptors) {
-        this(baseUrl, new InMemoryCookieJar(), interceptors)
+    BaseHttpClient(String baseUrl, List<HttpInterceptor> interceptors, Map<String, Object> config = [:]) {
+        this(baseUrl, new InMemoryCookieJar(), interceptors, config)
     }
 
     /**
-     * Full constructor. Use this to share both a cookie store and interceptors across instances.
+     * Use this constructor to share both a cookie store and interceptors across instances.
      * @param baseUrl Base URL for requests
      * @param cookieJar Shared CookieJar instance
      * @param interceptors List of {@link HttpInterceptor} applied to every request
+     * @param config Configuration map for timeouts and other settings (default: empty map)
      */
-    BaseHttpClient(String baseUrl, CookieJar cookieJar, List<HttpInterceptor> interceptors) {
+    BaseHttpClient(String baseUrl, CookieJar cookieJar, List<HttpInterceptor> interceptors, Map<String, Object> config = [:]) {
         this.baseUrl = baseUrl
         this.interceptors = new ArrayList<>(interceptors)
+        
+        def clientConfig = HttpClientConfig.defaults + config
         this.client = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
+                .connectTimeout(clientConfig.connectTimeout as long, TimeUnit.MILLISECONDS)
+                .readTimeout(clientConfig.readTimeout as long, TimeUnit.MILLISECONDS)
+                .writeTimeout(clientConfig.writeTimeout as long, TimeUnit.MILLISECONDS)
                 .build()
     }
 
